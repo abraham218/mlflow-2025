@@ -11,7 +11,6 @@ docker-compose up -d --build
 to verify if the bucket can be listed, run the below command from jupyter
 
 import boto3
-
 s3 = boto3.client(
     's3',
     endpoint_url='http://172.19.175.179:9000',  # ✅ S3 API port
