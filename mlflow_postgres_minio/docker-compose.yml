@@ -1,0 +1,65 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    container_name: mlflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mlflow
+      POSTGRES_USER: mlflow
+      POSTGRES_PASSWORD: Strong2025!
+    networks:
+      - mlflow-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  minio:
+    image: minio/minio
+    container_name: mlflow-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: mlflow
+      MINIO_ROOT_PASSWORD: NewStrong2025!
+    command: server /data --console-address ":9001"
+    networks:
+      - mlflow-network
+    volumes:
+      - bucket:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mlflow-server:v1
+    container_name: mlflow-server
+    depends_on:
+      - postgres
+      - minio
+    environment:
+      MLFLOW_TRACKING_URI: http://0.0.0.0:5000
+      MLFLOW_S3_ENDPOINT_URL: http://mlflow-minio:9000
+      AWS_ACCESS_KEY_ID: mlflow
+      AWS_SECRET_ACCESS_KEY: NewStrong2025!
+    command: >
+      mlflow server
+      --backend-store-uri postgresql://mlflow:Strong2025!@mlflow-postgres:5432/mlflow
+      --default-artifact-root s3://mlflow/
+      --host 0.0.0.0
+    ports:
+      - "5000:5000"
+    networks:
+      - mlflow-network
+
+networks:
+  mlflow-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+  bucket:
+
