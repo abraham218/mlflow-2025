@@ -93,3 +93,5 @@ with mlflow.start_run():
 
     # Log the model
     mlflow.sklearn.log_model(lr, "model")
+###############################################################################################
+# check the artifacts in the Mlflow server and Minio
