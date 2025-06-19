@@ -95,3 +95,10 @@ with mlflow.start_run():
     mlflow.sklearn.log_model(lr, "model")
 ###############################################################################################
 # check the artifacts in the Mlflow server and Minio
+
+# TO Check DB
+docker exec -it mlflow-postgres psql -U mlflow -d mlflow
+#\dt
+
+# If PostgreSQL client (psql) is installed locally:
+psql -h 172.200.134.210 -p 5433 -U mlflow -d mlflow
