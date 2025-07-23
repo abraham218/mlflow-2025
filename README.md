@@ -8,20 +8,26 @@ docker network create mlflow-network  #  No need for docker-compose
 docker-compose up -d --build
 
 # Create a bucket called mlfow in Minio 
+
 to verify if the bucket can be listed, run the below command from jupyter
 # !pip install boto3
+-------------------------------------------------------------------------------------
 import boto3
+from pprint import pprint
+
 s3 = boto3.client(
     's3',
-    endpoint_url='http://localhost:9000',  # ✅ S3 API port
+    endpoint_url='http://192.168.0.57:9000',
     aws_access_key_id='mlflow',
     aws_secret_access_key='NewStrong2025!',
-    #region_name='us-east-1'  # optional but common default
 )
 
-# List all buckets
-print(s3.list_buckets())
-
+# Get the list of buckets
+response = s3.list_buckets()
+# Extract only bucket names
+bucket_names = [bucket['Name'] for bucket in response.get('Buckets', [])]
+print(bucket_names)
+----------------------------------------------------------------------------------------
 # Once the Bucket is listed we can configure the env from jupyter 
 import os
 #http://localhost:5000/
